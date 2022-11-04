@@ -8,3 +8,5 @@ dist-ssr
 build
 release
 .npmrc
+info.ts
+action.ts

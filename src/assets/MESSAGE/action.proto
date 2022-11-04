@@ -1,0 +1,113 @@
+syntax = "proto2";
+package protocol;
+message UEInfo {
+  required int32 UEID = 1;
+  optional string IMSI = 2;
+  optional int32 Slice_ID = 3;
+  optional uint32 RNTI = 4;
+  optional int32 PH = 5;
+  optional int32 RSRP = 6;
+  optional float DL_BLER = 7;
+  optional int32 DL_MCS = 8;
+  optional float DLSCH_TOTAL_BYTES = 9;
+  optional int64 Time_Stamp = 10;
+
+}
+message SliceInfo {
+  required int32 Slice_ID = 1;
+  required int32 Resource_Allocation = 2;
+  optional int32 UE_Num = 3;
+  repeated UEInfo UE_List = 4;
+  optional float Thrpt = 5;
+}
+
+message SliceInfoList {
+  required int32 Slice_Num = 1;
+  repeated  SliceInfo Slice_List = 2;
+}
+
+message RpcRequest {
+  enum ResourceActionEnum //枚举消息类型
+    {
+        SLICE_GET_ALL = 0;
+        SLICE_CREATE = 1;
+        SLICE_UPDATE = 2;
+        SLICE_DELETE = 3;
+        SLICE_GET = 4;
+        SLICE_INIT = 5;
+        UE_MOVE = 6;
+        CLIENT_KEPP_ALLIVE = 7;
+    }
+  required ResourceActionEnum  Resource_Action =1;
+
+  oneof ResourceMessage {
+        SliceInfoGetMessage slice_Info_Get_Message = 5;
+        SliceInfoCreateMessage slice_Info_Create_Message =6;
+        SliceInfoUpdateMessage slice_Info_Update_Message = 7;
+        SliceInfoDeleteMessage slice_Info_Delete_Message = 8;
+        UEMOVEMessage ue_Move_Message = 9;
+    }
+
+}
+
+message RpcResponse {
+    required bool resp_status = 1;
+    required int64 resp_time_stamp = 2;
+    oneof ResourceResponseMessage {
+        SliceInfoGetAllResponse sliceInfo_Get_All_Response = 4;
+        SliceInfoGetResponse slice_Info_Get_Response = 5;
+        SliceInfoCreateResponse slice_Info_Create_Response =6;
+        SliceInfoUpdateResponse slice_Info_Update_Response = 7;
+        SliceInfoDeleteResponse slice_Info_Delete_Response = 8;
+        UEMOVEResponse ue_Move_Response = 9;
+    }
+}
+
+message SliceInfoGetAllResponse {
+  required int32 Slices_Num = 1;
+  repeated SliceInfo Slices = 2;
+}
+
+message UEMOVEMessage {
+  required int32 UE_Id = 1;
+  required int32 Slice_id = 2;
+}
+
+message UEMOVEResponse {
+  required bool success = 1;
+}
+
+message SliceInfoGetMessage {
+  required int32 Slice_ID = 1;
+}
+message SliceInfoGetResponse {
+  required SliceInfo Slice_Resp = 1;
+}
+
+message SliceInfoCreateMessage {
+  required SliceInfo Slice_Created = 1;
+}
+
+message SliceInfoCreateResponse {
+  required bool success = 1;
+}
+
+message SliceInfoUpdateMessage {
+  required SliceInfo Slice_Updated = 1;
+}
+
+message SliceInfoUpdateResponse {
+  required bool success = 1;
+}
+
+message SliceInfoDeleteMessage {
+  required SliceInfo Slice_Deleted = 1;
+}
+
+message SliceInfoDeleteResponse  {
+    required bool success = 1;
+
+}
+
+
+

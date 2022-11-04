@@ -25,11 +25,11 @@ const conn = async (): Promise<string> => {
   return res
 }
 
-const sent = async (msg: string): Promise<string> => {
-  const res = new Promise<any>((resolve, reject) => {
+const sent = async (msg: Uint8Array): Promise<Uint8Array> => {
+  const res = new Promise<Uint8Array>((resolve, reject) => {
     try {
       client.write(msg)
-      resolve("Successful send msg: " + msg)
+      resolve(msg)
     } catch (error) {
       reject(error)
     }
@@ -37,10 +37,11 @@ const sent = async (msg: string): Promise<string> => {
   return res
 }
 
-const recv = async (): Promise<string> => {
-  const res = new Promise<any>((resolve, reject) => {
+const recv = async (): Promise<Uint8Array> => {
+  const res = new Promise<Uint8Array>((resolve, reject) => {
     client.on("data", (data) => {
-      resolve(String.fromCharCode.apply(null, data))
+      // resolve(String.fromCharCode.apply(null, data))
+      resolve(data)
     })
     // try {
     //   const r = this.client.recv(msg)
