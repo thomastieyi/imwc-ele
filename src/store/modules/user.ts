@@ -18,32 +18,29 @@ export const useUserStore = defineStore("user", () => {
   /** 登录 */
   const login = (loginData: ILoginData) => {
     return new Promise((resolve, reject) => {
-      loginApi({
-        username: loginData.username,
-        password: loginData.password,
-        code: loginData.code
-      })
-        .then((res: any) => {
-          setToken(res.data.token)
-          token.value = res.data.token
-          resolve(true)
-        })
-        .catch((error) => {
-          reject(error)
-        })
+      setToken("token-admin")
+      token.value = "token-admin"
+      resolve(true)
+      // loginApi({
+      //   username: loginData.username,
+      //   password: loginData.password,
+      //   code: loginData.code
+      // })
+      //   .then((res: any) => {
+      //     setToken(res.data.token)
+      //     token.value = res.data.token
+      //     resolve(true)
+      //   })
+      //   .catch((error) => {
+      //     reject(error)
+      //   })
     })
   }
   /** 获取用户详情 */
   const getInfo = () => {
     return new Promise((resolve, reject) => {
-      getUserInfoApi()
-        .then((res: any) => {
-          roles.value = res.data.roles
-          resolve(res)
-        })
-        .catch((error) => {
-          reject(error)
-        })
+      roles.value = ["admin"]
+      resolve({ code: 0, data: { username: "admin", roles: ["admin"] }, message: "获取用户详情成功" })
     })
   }
   /** 切换角色 */

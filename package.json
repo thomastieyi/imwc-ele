@@ -80,7 +80,7 @@
       "target": [
         "nsis"
       ],
-      "icon": "static/icons/logo.ico",
+      "icon": "static/icons/ai.ico",
       "artifactName": "${productName} v${version}.${ext}",
       "requestedExecutionLevel": "requireAdministrator"
     }

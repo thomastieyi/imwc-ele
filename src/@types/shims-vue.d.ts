@@ -17,4 +17,6 @@ interface Window {
     $logger: typeof import('electron-log')
     $remote: typeof import('@electron/remote')
     $ipcRenderer: typeof import('electron')['ipcRenderer']
+    $net: typeof import('net')
+    $tcpClient: typeof import("../../script/preload/tcp-client").TcpClient
 }
