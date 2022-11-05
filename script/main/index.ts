@@ -124,7 +124,7 @@ function createMainWindow() {
       preload: preload, // 预先加载指定的脚本
       webSecurity: false, // 当设置为 false, 将禁用同源策略
       nodeIntegration: true, // 是否启用Node集成
-      contextIsolation: true, // 是否在独立 JavaScript 环境中运行 Electron API和指定的preload脚本，默认为 true
+      contextIsolation: false, // 是否在独立 JavaScript 环境中运行 Electron API和指定的preload脚本，默认为 true
       backgroundThrottling: false, // 是否在页面成为背景时限制动画和计时器，默认值为 true
       nodeIntegrationInWorker: true // 是否在Web工作器中启用了Node集成
     }
