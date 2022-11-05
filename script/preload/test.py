@@ -15,6 +15,8 @@ class MybaseRequestHandler(StreamRequestHandler):
             try:
                 data = self.request.recv(1024)
                 print(data)
+                if len(data) == 0:
+                  break
 
                 self.request.sendall(data)
             except:
@@ -30,7 +32,7 @@ class MyThreadingTCPServer(ThreadingMixIn, TCPServer):
 
 
 class MyTCPserver():
-  def __init__(self, server_addr='0.0.0.0', server_port=8080):
+  def __init__(self, server_addr='0.0.0.0', server_port=8081):
     self.server_address = server_addr
     self.server_port = server_port
     self.server_tuple = (self.server_address, self.server_port)

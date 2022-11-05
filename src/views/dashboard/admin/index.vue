@@ -23,11 +23,15 @@ onMounted(async () => {
 })
 
 const conn = async () => {
-  console.log(await client.conn(8080, "127.0.0.1"))
+  console.log(await client.conn(8081, "127.0.0.1"))
+}
+const disconn = async () => {
+  console.log(await client.disconn())
 }
 const send = async () => {
   await client.sent(input.value)
   res.value = await client.recv()
+  client.push_msg(res.value, false)
   console.log(client.state)
 }
 </script>
@@ -39,6 +43,7 @@ const send = async () => {
       <el-input v-model="input" placeholder="Please input" />
       <el-button @click="conn">conn</el-button>
       <el-button @click="send">send</el-button>
+      <el-button @click="disconn">disconn</el-button>
     </div>
   </div>
 </template>

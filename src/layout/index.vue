@@ -43,9 +43,9 @@ const handleClickOutside = () => {
         <TagsView v-if="showTagsView" />
       </div>
       <AppMain />
-      <RightPanel v-if="showSettings">
+      <!-- <RightPanel v-if="showSettings">
         <Settings />
-      </RightPanel>
+      </RightPanel> -->
     </div>
   </div>
 </template>
