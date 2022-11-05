@@ -1,28 +1,44 @@
-<script lang="ts">
+<script lang="ts" setup>
+import { useTcpStore } from "@/store/modules/tcp"
 import { UEInfo } from "@/utils/MESSAGE/info"
+import { onBeforeUnmount, onMounted, ref } from "vue"
+const res = ref(new Uint8Array())
+const client = useTcpStore()
+const input = ref("tcp sento")
+const state = client.state
+onMounted(async () => {
+  res.value = new Uint8Array([1])
+  // await client.conn(8080, "127.0.0.1")
+  // console.log(client.client)
+  // await client.sent(new Uint8Array([127]))
+  // res.value = await client.recv()
+  // console.log(res.value)
+  // console.log(client.client)
+  // await client.sent(new Uint8Array([2]))
+  // res.value = await client.recv()
+  // console.log(res.value)
+  // await client.sent(new Uint8Array([3]))
+  // res.value = await client.recv()
+  // console.log(res.value)
+})
 
-export default {
-  data() {
-    return { res: new Uint8Array(), client: window.$tcpClient }
-  },
-  async mounted() {
-    console.log(this.client)
-    const ue1: UEInfo = UEInfo.create()
-    ue1.dLBLER = 100.1
-    ue1.uEID = 120
-    ue1.timeStamp = BigInt(9007199214740911)
-    console.log("ueTam")
-    console.log(ue1)
-    this.client.setTcpLink("192.169.23.1", 8080)
-    this.client.conn()
-    this.res = await this.client.send(UEInfo.toBinary(ue1))
-    this.res = await this.client.recv()
-    const ueRec: UEInfo = UEInfo.fromBinary(this.res)
-    console.log("ueRec")
-    console.log(ueRec)
-  }
+const conn = async () => {
+  console.log(await client.conn(8080, "127.0.0.1"))
+}
+const send = async () => {
+  await client.sent(input.value)
+  res.value = await client.recv()
+  console.log(client.state)
 }
 </script>
 <template>
-  <div class="app-container">{{ res }}</div>
+  <div class="app-container">
+    recv data : {{ res }}
+    {{ client.state }}
+    <div>
+      <el-input v-model="input" placeholder="Please input" />
+      <el-button @click="conn">conn</el-button>
+      <el-button @click="send">send</el-button>
+    </div>
+  </div>
 </template>

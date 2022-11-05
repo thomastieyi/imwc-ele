@@ -1,7 +1,7 @@
-const net = require("net")
-let host: string | undefined
-let port: Number | undefined
-let client: any | undefined
+const net: typeof import("net") = require("net")
+let host: string | "127.0.0.1"
+let port: Number | 8080
+let client = new net.Socket()
 
 // const TcpClient= ()=> {
 
@@ -15,9 +15,11 @@ const setPara = (host1: string, port1: Number) => {
 const conn = async (): Promise<string> => {
   const res = new Promise<any>((resolve, reject) => {
     try {
-      client = net.connect({ server: host, port: port }, () => {
-        resolve("client connected")
+      client = new net.Socket()
+      client.connect(8080, "127.0.0.1", () => {
+        client.write("上线了.")
       })
+      console.log(client)
     } catch (error: any) {
       reject(error)
     }
