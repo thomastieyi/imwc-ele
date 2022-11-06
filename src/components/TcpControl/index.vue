@@ -1,56 +1,149 @@
 <script lang="ts" setup>
 import { type ThemeName, useTheme } from "../../hooks/useTheme"
-import { CircleCloseFilled, Connection, MagicStick } from "@element-plus/icons-vue"
+import { CircleCloseFilled, Connection, MagicStick, Sugar } from "@element-plus/icons-vue"
 import { useTcpStore } from "@/store/modules/tcp"
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { ElTooltip, ElIcon, ElDrawer, ElButton } from "element-plus"
 import TcpMsgTip from "@/components/TcpMsgTip/index.vue"
 import { Terminal } from "xterm"
+import { TCPClient } from "@/utils/tcp-client"
 import "xterm/css/xterm.css"
-const client = useTcpStore()
+const TCP = useTcpStore()
 const show = ref(false)
-const handleSetTcp = () => {
+const currTcpName = ref("default")
+const names = computed(() => {
+  const a = TCP.client_names.split("...")
+  a.shift()
+  return a
+})
+// watch(TCP.tcp_pool, (o, n) => {
+//   console.log(n)
+// })
+const ahost = ref()
+const aport = ref()
+
+const handleSetTcp = (clientName: string) => {
+  currTcpName.value = clientName
+  ahost.value = TCP.getTcpConnByName(currTcpName.value)?.tcp_conn_info.value.host
+  aport.value = TCP.getTcpConnByName(currTcpName.value)?.tcp_conn_info.value.port
+  console.log(clientName)
   show.value = true
 }
-
-const conn = async () => {
-  await client.conn()
-  console.log("res")
+const handleAddTcp = (clientName: string) => {
+  currTcpName.value = clientName
+  console.log(clientName)
+  show.value = true
 }
+// console.log(TCP.tcp_pool[0].client)
+// client.tcp_pool.conn(8080, "127.0.0.1")
+const conn = async () => {
+  // await client.conn()
+  console.log(TCP.getTcpConnByName(currTcpName.value))
+  // await TCP.addTcpPool("test")
+  try {
+    await TCP.getTcpConnByName(currTcpName.value)?.tcp_conn(aport.value, ahost.value)
+  } catch (error) {
+    console.log(error)
+  }
+  // TCP.getTcpConnByName(currTcpName.value)?.tcp_push_msg("asdasd", true)
+}
+console.log(names)
 const disconn = async () => {
-  console.log(await client.disconn())
+  await TCP.getTcpConnByName(currTcpName.value)?.tcp_disconn()
+  // console.log(await client.disconn())
 }
 </script>
 
 <template>
-  <div @click="handleSetTcp">
-    <el-tooltip effect="dark" :content="client.state == 'CONNECTED' ? 'TCP连接成功' : '已断开'" placement="bottom">
-      <el-icon :size="20" :color="client.state == 'CONNECTED' ? '#67C23A' : '#F56C6C'">
+  <el-dropdown trigger="click">
+    <div>
+      <el-tooltip effect="dark" content="TCP连接情况" placement="bottom">
+        <el-icon :size="20">
+          <Connection />
+        </el-icon>
+      </el-tooltip>
+    </div>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item v-for="client in names" :key="client" @click="handleSetTcp(client)">
+          <div class="dropdown">
+            <div class="clientname">{{ client }}</div>
+            <el-icon
+              :size="20"
+              class="icon"
+              :color="TCP.getTcpConnByName(client)?.tcp_state.value == 'CONNECTED' ? '#67C23A' : '#F56C6C'"
+            >
+              <Connection />
+            </el-icon>
+          </div>
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+  <!-- <div @click="handleSetTcp">
+    <el-tooltip
+      effect="dark"
+      :content="TCP.getTcpConnByName('default')?.tcp_state.value == 'CONNECTED' ? 'TCP连接成功' : '已断开'"
+      placement="bottom"
+    >
+      <el-icon
+        :size="20"
+        :color="TCP.getTcpConnByName('default')?.tcp_state.value == 'CONNECTED' ? '#67C23A' : '#F56C6C'"
+      >
         <Connection />
       </el-icon>
     </el-tooltip>
-  </div>
+  </div> -->
 
   <el-drawer v-model="show" size="350px" :show-close="false" :with-header="false">
-    <div class="result">
-      <el-result
-        :icon="client.state == 'CONNECTED' ? 'success' : 'error'"
-        :title="client.state == 'CONNECTED' ? 'TCP连接成功' : 'TCP连接已断开'"
-      />
+    <div class="dropdown">
+      <div class="clientname">
+        '{{ TCP.getTcpConnByName(currTcpName)?.clientName_ }}'
+        {{ TCP.getTcpConnByName(currTcpName)?.tcp_state.value == "CONNECTED" ? "连接成功" : "连接已断开" }}
+      </div>
+      <el-icon
+        :size="20"
+        class="icon"
+        :color="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED' ? '#67C23A' : '#F56C6C'"
+      >
+        <Connection />
+      </el-icon>
     </div>
-    <el-input v-model="client.conn_info.host" placeholder="Please input" :disabled="client.state == 'CONNECTED'">
+
+    <!-- {{ TCP.getTcpConnByName(currTcpName)?.tcp_conn_info.value.host }}:{{
+      TCP.getTcpConnByName(currTcpName)?.tcp_conn_info.value.port
+    }} -->
+    <el-input
+      v-model="ahost"
+      placeholder="Please input"
+      :disabled="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED'"
+    >
       <template #prepend>HOST</template>
     </el-input>
-    <el-input v-model="client.conn_info.port" placeholder="Please input" :disabled="client.state == 'CONNECTED'">
+    <el-input
+      v-model="aport"
+      placeholder="Please input"
+      :disabled="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED'"
+    >
       <template #prepend>PORT</template>
     </el-input>
     <div class="input">
-      <el-button type="success" @click="conn" :disabled="client.state !== 'UNCONNECTED'">连接</el-button>
-      <el-button type="danger" @click="disconn" :disabled="client.state !== 'CONNECTED'">断开</el-button>
+      <el-button
+        type="success"
+        @click="conn"
+        :disabled="TCP.getTcpConnByName(currTcpName)?.tcp_state.value !== 'UNCONNECTED'"
+        >连接</el-button
+      >
+      <el-button
+        type="danger"
+        @click="disconn"
+        :disabled="TCP.getTcpConnByName(currTcpName)?.tcp_state.value !== 'CONNECTED'"
+        >断开</el-button
+      >
     </div>
 
     <el-divider />
-    <TcpMsgTip />
+    <TcpMsgTip v-model:client-name="currTcpName" />
     <!-- <div v-for="item in client.conn_msgs" v-bind:key="item.msg">
       <TcpMsgTip :updown="item.updown" :msg="item.msg" />
     </div> -->
@@ -63,8 +156,22 @@ const disconn = async () => {
   margin-top: 5px;
   margin-bottom: -20px;
 }
+
 .result {
   margin-bottom: -40px;
-  margin-top: -40px;
+  margin-top: 80px;
+}
+
+.dropdown {
+  display: flex;
+  justify-content: space-between;
+}
+
+.clientname {
+  // margin-right: 166px;
+}
+
+.icon {
+  display: inline;
 }
 </style>

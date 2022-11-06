@@ -3,7 +3,7 @@ import logger from "electron-log"
 import { contextBridge, ipcRenderer } from "electron"
 const remote = require("@electron/remote")
 const net = require("net")
-const TcpClient: typeof import("./tcp-client").TcpClient = require("./tcp-client").TcpClient
+
 console.log("connecting to server...")
 
 // --------- Expose some API to Renderer process ---------
