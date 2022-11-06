@@ -3028,11 +3028,6 @@ globby@^11.1.0:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
-google-protobuf@^3.21.2:
-  version "3.21.2"
-  resolved "https://registry.npmmirror.com/google-protobuf/-/google-protobuf-3.21.2.tgz"
-  integrity sha512-3MSOYFO5U9mPGikIYCzK0SaThypfGgS6bHqrUGXG3DPHCrb+txNqeEcns1W0lkGfk0rCyNXm7xB9rMxnCiZOoA==
-
 got@^9.6.0:
   version "9.6.0"
   resolved "https://registry.npmmirror.com/got/-/got-9.6.0.tgz"
