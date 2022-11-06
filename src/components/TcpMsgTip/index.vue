@@ -41,3 +41,11 @@ const initTerm = () => {
 <template>
   <div id="terminal" />
 </template>
+<style lang="scss" scoped>
+#terminal {
+  display: flex;
+  margin-top: 5px;
+  margin-bottom: -20px;
+  overflow: hidden;
+}
+</style>

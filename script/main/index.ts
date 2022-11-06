@@ -133,9 +133,9 @@ function createMainWindow() {
   winMain.setMenu(null)
   isDev ? winMain.loadURL(winURL) : winMain.loadFile(winURL)
   remote.enable(winMain.webContents)
-  // if (isDev) {
-  winMain.webContents.openDevTools() // 显示调试工具
-  // }
+  if (isDev) {
+    winMain.webContents.openDevTools() // 显示调试工具
+  }
 
   // 初始化完成后显示
   winMain.on("ready-to-show", () => {

@@ -1,6 +1,13 @@
 <script lang="ts" setup>
 import { useTcpStore } from "@/store/modules/tcp"
 import { UEInfo } from "@/utils/MESSAGE/info"
+import {
+  RpcRequest,
+  RpcRequest_ResourceActionEnum,
+  RpcResponse,
+  SliceInfoCreateMessage,
+  SliceInfoGetMessage
+} from "@/utils/MESSAGE/action"
 import { onBeforeUnmount, onMounted, ref } from "vue"
 const res = ref(new Uint8Array())
 const client = useTcpStore()
@@ -23,16 +30,22 @@ onMounted(async () => {
 })
 
 const conn = async () => {
-  console.log(await client.conn(8081, "127.0.0.1"))
+  console.log(await client.conn())
 }
 const disconn = async () => {
   console.log(await client.disconn())
 }
 const send = async () => {
-  await client.sent(input.value)
+  const rpcRequest = RpcRequest.fromPartial({ ResourceAction: RpcRequest_ResourceActionEnum.SLICE_GET_ALL })
+  // rpcRequest.sliceInfoCreateMessage = SliceInfoCreateMessage.fromPartial({ SliceCreated: { SliceID: 1 } })
+
+  console.log(rpcRequest)
+  console.log(RpcRequest.encode(rpcRequest).finish())
+  await client.sent(RpcRequest.encode(rpcRequest).finish())
   res.value = await client.recv()
   client.push_msg(res.value, false)
-  console.log(client.state)
+  console.log("RpcRequest.decode(res.value)")
+  console.log(RpcResponse.decode(res.value))
 }
 </script>
 <template>
