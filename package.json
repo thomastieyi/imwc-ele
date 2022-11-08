@@ -94,6 +94,7 @@
     "electron-log": "^4.4.8",
     "electron-notarize": "^1.2.1",
     "element-plus": "^2.2.19",
+    "fluent-ffmpeg": "^2.1.2",
     "lodash-es": "^4.17.21",
     "long": "^5.2.1",
     "normalize.css": "^8.0.1",

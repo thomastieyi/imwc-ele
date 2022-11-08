@@ -10,18 +10,27 @@ export class TCPClient {
   constructor(clientName: string) {
     console.log(clientName)
     this.clientName_ = clientName
+    this.tcp_conn_msgs.value[0].msg = `tcp://${clientName}`
   }
   tcp_conn = async (port = this.tcp_conn_info.value.port, host = this.tcp_conn_info.value.host): Promise<string> => {
     this.tcp_conn_info.value.port = port
     this.tcp_conn_info.value.host = host
-    console.log(this.tcp_conn_info)
     const res = new Promise<any>((resolve, reject) => {
-      this.tcp_client.connect(port, host, () => {
-        this.tcp_conn_info.value.port = port
-        this.tcp_conn_info.value.host = host
-        this.tcp_state.value = "CONNECTED"
-        resolve(this.tcp_state.value)
-      })
+      try {
+        this.tcp_state.value = "CONNECTING"
+        this.tcp_client.connect(port, host, () => {
+          this.tcp_conn_info.value.port = port
+          this.tcp_conn_info.value.host = host
+          this.tcp_state.value = "CONNECTED"
+          resolve(this.tcp_state.value)
+        })
+        this.tcp_client.once("error", (err) => {
+          this.tcp_state.value = "UNCONNECTED"
+          reject(err)
+        })
+      } catch (error) {
+        console.log(error)
+      }
     })
     return res
   }
@@ -55,11 +64,15 @@ export class TCPClient {
 
   tcp_recv = async (): Promise<any> => {
     const res = new Promise<any>((resolve, reject) => {
-      this.tcp_client.on("data", (data) => {
+      this.tcp_client.once("data", (data) => {
         resolve(data)
       })
     })
     return res
+  }
+
+  tcp_recv_long = (cb: (data: any) => void): void => {
+    this.tcp_client.on("data", cb)
   }
 
   tcp_disconn = async (): Promise<any> => {

@@ -2,8 +2,8 @@
 import { type ThemeName, useTheme } from "../../hooks/useTheme"
 import { CircleCloseFilled, Connection, MagicStick, Sugar } from "@element-plus/icons-vue"
 import { useTcpStore } from "@/store/modules/tcp"
-import { computed, ref, watch } from "vue"
-import { ElTooltip, ElIcon, ElDrawer, ElButton } from "element-plus"
+import { computed, h, ref, watch } from "vue"
+import { ElTooltip, ElIcon, ElDrawer, ElButton, ElNotification } from "element-plus"
 import TcpMsgTip from "@/components/TcpMsgTip/index.vue"
 import { Terminal } from "xterm"
 import { TCPClient } from "@/utils/tcp-client"
@@ -15,6 +15,10 @@ const names = computed(() => {
   const a = TCP.client_names.split("...")
   a.shift()
   return a
+})
+const new_conn = ref(false)
+watch(names, (o, n) => {
+  new_conn.value = true
 })
 // watch(TCP.tcp_pool, (o, n) => {
 //   console.log(n)
@@ -28,6 +32,7 @@ const handleSetTcp = (clientName: string) => {
   aport.value = TCP.getTcpConnByName(currTcpName.value)?.tcp_conn_info.value.port
   console.log(clientName)
   show.value = true
+  new_conn.value = false
 }
 const handleAddTcp = (clientName: string) => {
   currTcpName.value = clientName
@@ -42,8 +47,22 @@ const conn = async () => {
   // await TCP.addTcpPool("test")
   try {
     await TCP.getTcpConnByName(currTcpName.value)?.tcp_conn(aport.value, ahost.value)
+    ElNotification({
+      title: "连接成功",
+      message: h("i", { style: "color: teal" }, `${ahost.value}:${aport.value}`),
+      duration: 2000,
+      type: "success",
+      position: "bottom-right"
+    })
   } catch (error) {
     console.log(error)
+    ElNotification({
+      title: "连接失败",
+      message: h("i", { style: "color: red" }, JSON.stringify(error)),
+      duration: 1500,
+      type: "error",
+      position: "bottom-right"
+    })
   }
   // TCP.getTcpConnByName(currTcpName.value)?.tcp_push_msg("asdasd", true)
 }
@@ -56,13 +75,15 @@ const disconn = async () => {
 
 <template>
   <el-dropdown trigger="click">
-    <div>
-      <el-tooltip effect="dark" content="TCP连接情况" placement="bottom">
-        <el-icon :size="20">
-          <Connection />
-        </el-icon>
-      </el-tooltip>
-    </div>
+    <el-badge :is-dot="new_conn" class="item">
+      <div>
+        <el-tooltip effect="dark" content="TCP连接情况" placement="bottom">
+          <el-icon :size="20">
+            <Connection />
+          </el-icon>
+        </el-tooltip>
+      </div>
+    </el-badge>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item v-for="client in names" :key="client" @click="handleSetTcp(client)">
@@ -96,16 +117,15 @@ const disconn = async () => {
   </div> -->
 
   <el-drawer v-model="show" size="350px" :show-close="false" :with-header="false">
-    <div class="dropdown">
-      <div class="clientname">
-        '{{ TCP.getTcpConnByName(currTcpName)?.clientName_ }}'
-        {{ TCP.getTcpConnByName(currTcpName)?.tcp_state.value == "CONNECTED" ? "连接成功" : "连接已断开" }}
-      </div>
-      <el-icon
-        :size="20"
-        class="icon"
-        :color="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED' ? '#67C23A' : '#F56C6C'"
-      >
+    <div class="dropdown" v-if="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED'">
+      <div class="clientname">'{{ TCP.getTcpConnByName(currTcpName)?.clientName_ }}' 连接成功</div>
+      <el-icon :size="20" class="icon" :color="'#67C23A'">
+        <Connection />
+      </el-icon>
+    </div>
+    <div class="dropdown" v-if="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'UNCONNECTED'">
+      <div class="clientname">'{{ TCP.getTcpConnByName(currTcpName)?.clientName_ }}' 连接失败</div>
+      <el-icon :size="20" class="icon" :color="'#F56C6C'">
         <Connection />
       </el-icon>
     </div>

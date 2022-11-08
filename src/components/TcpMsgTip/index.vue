@@ -1,17 +1,23 @@
 <script lang="ts" setup>
-import { CaretBottom, CaretTop } from "@element-plus/icons-vue"
+import { BottomLeft, CaretBottom, CaretTop } from "@element-plus/icons-vue"
 import { ElTooltip, ElIcon, ElDrawer, ElButton } from "element-plus"
 import { computed, onActivated, onMounted, ref, watch } from "vue"
 import { Terminal } from "xterm"
 import { useTcpStore } from "@/store/modules/tcp"
+import { Item } from "electron"
 const TCP = useTcpStore()
 const terminal = ref(null)
 const term = ref(new Terminal())
+const show_up = ref(true)
+const show_down = ref(true)
 const props = defineProps({
   clientName: {
     default: "default",
     required: true
   }
+})
+const show_both = computed(() => {
+  return show_down.value && show_up.value
 })
 
 const emits = defineEmits(["clientName"])
@@ -28,34 +34,14 @@ watch(clientName, (n, o) => {
   printcnt.value = 0
   term.value.clear()
   term.value.writeln(`${n}`)
-  while (printcnt.value < TCP.getTcpConnByName(n)!.tcp_conn_msgs.value.length) {
-    term.value.writeln(
-      `${TCP.getTcpConnByName(n)!.tcp_conn_msgs.value[printcnt.value].updown ? "↑" : "↓"} ${JSON.stringify(
-        TCP.getTcpConnByName(n)!.tcp_conn_msgs.value[printcnt.value].msg
-      )}`
-    )
-    printcnt.value++
-  }
 })
 
 const printcnt = ref(0)
 
 watch(TCP.getTcpConnByName(clientName.value)!.tcp_conn_msgs.value, (oldv, newv) => {
   console.log(newv)
-  term.value.writeln(`${newv[newv?.length - 1].updown ? "↑" : "↓"} ${JSON.stringify(newv[newv.length - 1].msg)}`)
 })
-onMounted(async () => {
-  initTerm()
-  term.value.writeln(`${clientName.value}`)
-  while (printcnt.value < TCP.getTcpConnByName(clientName.value)!.tcp_conn_msgs.value.length) {
-    term.value.writeln(
-      `${
-        TCP.getTcpConnByName(clientName.value)!.tcp_conn_msgs.value[printcnt.value].updown ? "↑" : "↓"
-      } ${JSON.stringify(TCP.getTcpConnByName(clientName.value)!.tcp_conn_msgs.value[printcnt.value].msg)}`
-    )
-    printcnt.value++
-  }
-})
+onMounted(async () => {})
 onActivated(async () => {})
 const initTerm = () => {
   term.value = new Terminal({
@@ -80,13 +66,35 @@ const initTerm = () => {
 </script>
 
 <template>
-  <div id="terminal" />
+  <div id="terminal">
+    发送 <el-switch v-model="show_up" inline-prompt active-text="是" inactive-text="否" /> 接受
+    <el-switch v-model="show_down" inline-prompt active-text="是" inactive-text="否" />
+    <div v-for="item in TCP.getTcpConnByName(clientName)!.tcp_conn_msgs.value" v-bind:key="item.msg">
+      <div class="p" v-if="show_both ? true : show_up == item.updown && show_down == !item.updown">
+        <el-icon v-if="item.updown" :color="'green'"><TopRight /></el-icon
+        ><el-icon v-if="!item.updown" :color="'#F56C6C'"><BottomLeft /></el-icon>
+        <div class="line">{{ item.msg }}</div>
+      </div>
+    </div>
+  </div>
 </template>
 <style lang="scss" scoped>
 #terminal {
-  display: flex;
-  margin-top: 5px;
+  // display: flex;
+  margin-top: -20px;
   // margin-bottom: -20px;
   overflow: auto;
+}
+.p {
+  // padding-top: -5px;
+  display: flex;
+}
+.line {
+  font-size: smaller;
+  margin-top: 7.8px;
+  margin-left: 7px;
+  line-height: 1px;
+  font-family: Georgia, "Times New Roman", Times, serif, Monaco, Menlo, Consolas, "Courier New", monospace;
+  color: rgb(0, 0, 0);
 }
 </style>
