@@ -57,16 +57,16 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: "/unocss",
+    path: "/stream",
     component: Layout,
     redirect: "/unocss/index",
     children: [
       {
         path: "index",
         component: () => import("@/views/unocss/index.vue"),
-        name: "UnoCSS",
+        name: "StreamAI",
         meta: {
-          title: "unocss",
+          title: "StreamAI",
           svgIcon: "unocss"
         }
       }

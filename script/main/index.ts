@@ -2,6 +2,7 @@ import PATH from "path"
 import PKG from "../../package.json"
 import LOGGER from "electron-log"
 import { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain } from "electron"
+app.commandLine.appendSwitch("--no-sandbox")
 const remote = require("@electron/remote/main")
 remote.initialize() // 初始化
 

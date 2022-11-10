@@ -10,3 +10,4 @@ release
 .npmrc
 info.ts
 action.ts
+*.js

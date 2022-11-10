@@ -1,16 +1,63 @@
+<script lang="ts" setup>
+import { useTcpStore } from "@/store/modules/tcp"
+import { UEInfo } from "@/utils/MESSAGE/info"
+import VideoCard from "@/components/VideoCard/index.vue"
+import {
+  RpcRequest,
+  RpcRequest_ResourceActionEnum,
+  RpcResponse,
+  SliceInfoCreateMessage,
+  SliceInfoGetMessage
+} from "@/utils/MESSAGE/action"
+import { onBeforeUnmount, onMounted, ref } from "vue"
+import JSMpeg from "@/utils/jsmpeg"
+const res = ref(new Uint8Array())
+const TCP = useTcpStore()
+const input = ref("tcp sento")
+// const state = client.state
+onMounted(async () => {
+  res.value = new Uint8Array([1])
+  // await client.conn(8080, "127.0.0.1")
+  // console.log(client.client)
+  // await client.sent(new Uint8Array([127]))
+  // res.value = await client.recv()
+  // console.log(res.value)
+  // console.log(client.client)
+  // await client.sent(new Uint8Array([2]))
+  // res.value = await client.recv()
+  // console.log(res.value)
+  // await client.sent(new Uint8Array([3]))
+  // res.value = await client.recv()
+  // console.log(res.value)
+})
+
+const conn = async () => {
+  TCP.addTcpPool("test_admin")
+  // console.log(await client.conn())
+}
+const disconn = async () => {
+  TCP.delTcpConnByName("test_admin")
+  // console.log(await client.disconn())
+}
+const send = async () => {
+  await TCP.getTcpConnByName("test_admin")?.tcp_sent(input.value)
+  res.value = await TCP.getTcpConnByName("test_admin")?.tcp_recv()
+  TCP.getTcpConnByName("test_admin")?.tcp_push_msg(res.value, false)
+  // const rpcRequest = RpcRequest.fromPartial({ ResourceAction: RpcRequest_ResourceActionEnum.SLICE_GET_ALL })
+  // // rpcRequest.sliceInfoCreateMessage = SliceInfoCreateMessage.fromPartial({ SliceCreated: { SliceID: 1 } })
+  // console.log(rpcRequest)
+  // console.log(RpcRequest.encode(rpcRequest).finish())
+  // await client.sent(RpcRequest.encode(rpcRequest).finish())
+  // res.value = await client.recv()
+  // client.push_msg(res.value, false)
+  // console.log("RpcRequest.decode(res.value)")
+  // console.log(RpcResponse.decode(res.value))
+}
+</script>
 <template>
-  <div h-full app-container>
-    <div h-full text-center flex select-none all:transition-400>
-      <div ma>
-        <div text-5xl fw100 animate-bounce-alt animate-count-infinite animate-1s>UnoCSS</div>
-        <div op30 dark:op60 text-lg fw300 m1>具有高性能且极具灵活性的即时原子化 CSS 引擎</div>
-        <div m2 flex justify-center text-lg op30 dark:op60 hover="op80" dark:hover="op80">
-          <a href="https://antfu.me/posts/reimagine-atomic-css-zh" target="_blank">推荐阅读：重新构想原子化 CSS</a>
-        </div>
-      </div>
-    </div>
-    <div absolute bottom-5 right-0 left-0 text-center op30 dark:op60 fw300>
-      该页面是一个 UnoCSS 的使用案例，其他页面依旧采用 Scss
-    </div>
+  <div class="app-container">
+    <VideoCard stream-name="AI" title="TEST_AI" />
+    <!-- <VideoCard stream-name="VR" title="TEST_VR" /> -->
+    <!-- <VideoCard stream-name="preview" title="TEST_preview" /> -->
   </div>
 </template>
