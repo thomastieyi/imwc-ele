@@ -24,11 +24,20 @@ export class TCPClient {
           this.tcp_state.value = "CONNECTED"
           resolve(this.tcp_state.value)
         })
-        this.tcp_client.once("error", (err) => {
+        this.tcp_client.on("error", (err) => {
+          this.tcp_state.value = "UNCONNECTED"
+          reject(err)
+        })
+        this.tcp_client.on("close", (err) => {
+          this.tcp_state.value = "UNCONNECTED"
+          reject(err)
+        })
+        this.tcp_client.on("end", (err) => {
           this.tcp_state.value = "UNCONNECTED"
           reject(err)
         })
       } catch (error) {
+        this.tcp_state.value = "UNCONNECTED"
         console.log(error)
       }
     })

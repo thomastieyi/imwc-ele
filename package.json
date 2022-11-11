@@ -1,8 +1,8 @@
 {
-  "name": "v3-electron-vite",
+  "name": "OpenXG-Ai-Engine",
   "version": "0.0.1",
   "main": "dist/main/index.js",
-  "author": "nevlf<2863180001@qq.com>",
+  "author": "WangDong<897253127@qq.com>",
   "description": "electron",
   "license": "MIT",
   "keywords": [
@@ -18,7 +18,7 @@
   "env": {
     "host": "127.0.0.1",
     "port": 13333,
-    "title": "V3 Electron Vite",
+    "title": "OpenXG-Ai-Engine",
     "identity": null,
     "provisioningProfile": "build/v3electron.provisionprofile",
     "entitlements": "build/entitlements.mac.plist",
@@ -35,12 +35,17 @@
     "prepare": "husky install"
   },
   "build": {
-    "productName": "v3-electron-vite",
+    "productName": "OpenXG-Ai-Engine",
     "appId": "com.app.v3-electron-vite",
     "directories": {
       "output": "release/v${version}"
     },
-    "extraResources": [],
+    "extraResources": [
+      {
+        "from": "resources/test",
+        "to": "test"
+      }
+    ],
     "files": [
       "dist/**/*",
       "static/**/*"
@@ -94,6 +99,8 @@
     "electron-log": "^4.4.8",
     "electron-notarize": "^1.2.1",
     "element-plus": "^2.2.19",
+    "iconv-lite": "^0.6.3",
+    "koa": "^2.13.4",
     "lodash-es": "^4.17.21",
     "long": "^5.2.1",
     "normalize.css": "^8.0.1",
@@ -103,6 +110,7 @@
     "pinia": "^2.0.23",
     "protobufjs": "^7.1.2",
     "screenfull": "^6.0.2",
+    "socket.io": "^4.5.3",
     "vue": "^3.2.41",
     "vue-router": "^4.1.6",
     "vxe-table": "^4.3.5",

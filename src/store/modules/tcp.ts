@@ -38,9 +38,7 @@ export const useTcpStore = defineStore("tcpclient", () => {
       tcp_pool.splice(flag, 1)
     }
   }
-  addTcpPool("default")
-  addTcpPool("test1")
-  addTcpPool("test2")
+  addTcpPool("gNodeB")
   return { tcp_pool, getTcpConnByName, addTcpPool, delTcpConnByName, client_names }
 })
 

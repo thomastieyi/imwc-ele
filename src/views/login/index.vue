@@ -72,7 +72,7 @@ const createCode = () => {
 
 <template>
   <div class="login-container">
-    <ThemeSwitch class="theme-switch" />
+    <!-- <ThemeSwitch class="theme-switch" /> -->
     <div class="login-card">
       <div class="title">
         <img src="@/assets/layout/logo-text-2.png" />

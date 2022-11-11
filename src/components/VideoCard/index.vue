@@ -12,10 +12,6 @@ const term = ref(new Terminal())
 const show_up = ref(true)
 const show_down = ref(true)
 const props = defineProps({
-  clientName: {
-    default: "default",
-    required: true
-  },
   title: {
     default: "Powered by OpenXG AI-Engine",
     required: true
@@ -47,34 +43,13 @@ watch(clientName, (n, o) => {
 
 const printcnt = ref(0)
 
-watch(TCP.getTcpConnByName(clientName.value)!.tcp_conn_msgs.value, (oldv, newv) => {
-  console.log(newv)
-})
 onMounted(async () => {
   const canvas = document.getElementById(props.streamName)
-  const player = new JSMpeg.Player(`ws://${document.domain}:8082/` + props.streamName, { canvas: canvas })
+  const player = new JSMpeg.Player(`ws://${document.domain ? document.domain : "127.0.0.1"}:8082/` + props.streamName, {
+    canvas: canvas
+  })
 })
 onActivated(async () => {})
-const initTerm = () => {
-  term.value = new Terminal({
-    rows: 45,
-    lineHeight: 1.2,
-    fontSize: 9.5,
-    fontFamily: "Monaco, Menlo, Consolas, 'Courier New', monospace",
-    theme: {
-      foreground: "yellow", //字体
-      background: "#060101", //背景色
-      cursor: "help" //设置光标
-    },
-    // 光标闪烁
-    cursorBlink: false,
-    cursorStyle: "underline",
-    scrollback: 1,
-    tabStopWidth: 4
-  })
-  const s: HTMLElement = document.getElementById("terminal") as HTMLElement
-  term.value.open(s)
-}
 </script>
 
 <template>
@@ -117,7 +92,7 @@ const initTerm = () => {
   padding: 10px;
   border-radius: 10px;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1400px;
   margin: 15px;
   // display: flex;
   flex-direction: row;

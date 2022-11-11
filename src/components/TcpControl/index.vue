@@ -2,23 +2,37 @@
 import { type ThemeName, useTheme } from "../../hooks/useTheme"
 import { CircleCloseFilled, Connection, MagicStick, Sugar } from "@element-plus/icons-vue"
 import { useTcpStore } from "@/store/modules/tcp"
-import { computed, h, ref, watch } from "vue"
+import { computed, h, onMounted, ref, watch } from "vue"
 import { ElTooltip, ElIcon, ElDrawer, ElButton, ElNotification } from "element-plus"
 import TcpMsgTip from "@/components/TcpMsgTip/index.vue"
 import { Terminal } from "xterm"
 import { TCPClient } from "@/utils/tcp-client"
 import "xterm/css/xterm.css"
+import { setInterval } from "timers/promises"
 const TCP = useTcpStore()
 const show = ref(false)
-const currTcpName = ref("default")
+const currTcpName = ref("gNodeB")
 const names = computed(() => {
   const a = TCP.client_names.split("...")
   a.shift()
   return a
 })
+const err = ref(300)
+const gNodeBConn = computed(() => {
+  return TCP.getTcpConnByName("gNodeB")?.tcp_state.value
+})
 const new_conn = ref(false)
 watch(names, (o, n) => {
   new_conn.value = true
+})
+
+watch(gNodeBConn, (n, o) => {
+  console.log(n)
+  if (n == "UNCONNECTED") {
+    setTimeout(() => {
+      conn()
+    }, err.value)
+  }
 })
 // watch(TCP.tcp_pool, (o, n) => {
 //   console.log(n)
@@ -41,6 +55,14 @@ const handleAddTcp = (clientName: string) => {
 }
 // console.log(TCP.tcp_pool[0].client)
 // client.tcp_pool.conn(8080, "127.0.0.1")
+onMounted(() => {
+  ahost.value = "192.168.1.220"
+  aport.value = 9999
+
+  // if (TCP.getTcpConnByName(currTcpName.value)?.tcp_state.value == "UNCONNECTED") {
+  conn()
+  // }
+})
 const conn = async () => {
   // await client.conn()
   console.log(TCP.getTcpConnByName(currTcpName.value))
@@ -48,21 +70,24 @@ const conn = async () => {
   try {
     await TCP.getTcpConnByName(currTcpName.value)?.tcp_conn(aport.value, ahost.value)
     ElNotification({
-      title: "连接成功",
+      title: `${currTcpName.value}连接成功`,
       message: h("i", { style: "color: teal" }, `${ahost.value}:${aport.value}`),
       duration: 2000,
       type: "success",
       position: "bottom-right"
     })
+    err.value = 300
   } catch (error) {
     console.log(error)
-    ElNotification({
-      title: "连接失败",
-      message: h("i", { style: "color: red" }, JSON.stringify(error)),
-      duration: 1500,
-      type: "error",
-      position: "bottom-right"
-    })
+    // ElMessage.error('Oops, this is a error message.')
+    // ElNotification({
+    //   title: "连接失败",
+    //   message: h("i", { style: "color: red" }, JSON.stringify(error)),
+    //   duration: 1500,
+    //   type: "error",
+    //   position: "bottom-right"
+    // })
+    // err.value *= 2
   }
   // TCP.getTcpConnByName(currTcpName.value)?.tcp_push_msg("asdasd", true)
 }
@@ -78,7 +103,10 @@ const disconn = async () => {
     <el-badge :is-dot="new_conn" class="item">
       <div>
         <el-tooltip effect="dark" content="TCP连接情况" placement="bottom">
-          <el-icon :size="20">
+          <el-icon
+            :size="20"
+            :color="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED' ? '#67C23A' : '#F56C6C'"
+          >
             <Connection />
           </el-icon>
         </el-tooltip>
