@@ -56,6 +56,22 @@ export const constantRoutes: RouteRecordRaw[] = [
       }
     ]
   },
+  // {
+  //   path: "/stream",
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: "http://stream.icfn.top",
+  //       component: () => {},
+  //       name: "stream",
+  //       meta: {
+  //         title: "StreamAI",
+  //         svgIcon: "link"
+  //       }
+  //     }
+  //   ]
+  // }
+
   {
     path: "/stream",
     component: Layout,

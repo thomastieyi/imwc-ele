@@ -1,6 +1,6 @@
 {
   "name": "OpenXG-Ai-Engine",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/main/index.js",
   "author": "WangDong<897253127@qq.com>",
   "description": "electron",

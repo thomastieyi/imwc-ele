@@ -15,8 +15,15 @@ const res = ref(new Uint8Array())
 </script>
 <template>
   <div class="app-container">
+    <VideoCard stream-name="VR" title="原始码流" />
     <VideoCard stream-name="AI" title="目标检测功能增强（AI引擎提供）" />
     <!-- <VideoCard stream-name="VR" title="TEST_VR" /> -->
     <!-- <VideoCard stream-name="preview" title="TEST_preview" /> -->
   </div>
 </template>
+
+<style lang="scss" scoped>
+.app-container {
+  display: flex;
+}
+</style>

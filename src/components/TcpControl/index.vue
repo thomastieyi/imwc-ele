@@ -29,6 +29,15 @@ watch(names, (o, n) => {
 watch(gNodeBConn, (n, o) => {
   console.log(n)
   if (n == "UNCONNECTED") {
+    if (o == "CONNECTED") {
+      ElNotification({
+        title: "基站失去连接",
+        message: h("i", { style: "color: red" }, JSON.stringify("UNCONNECTED")),
+        duration: 1500,
+        type: "error",
+        position: "bottom-right"
+      })
+    }
     setTimeout(() => {
       conn()
     }, err.value)
