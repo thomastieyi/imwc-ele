@@ -1,5 +1,5 @@
 {
-  "name": "OpenXG-Ai-Engine",
+  "name": "cfn-client",
   "version": "0.0.2",
   "main": "dist/main/index.js",
   "author": "WangDong<897253127@qq.com>",

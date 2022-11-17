@@ -14,7 +14,7 @@ import JSMpeg from "@/utils/jsmpeg"
 const res = ref(new Uint8Array())
 const TCP = useTcpStore()
 const input = ref("tcp sento")
-const loading = ref(true)
+const loading = ref(false)
 // const state = client.state
 onMounted(async () => {
   res.value = new Uint8Array([1])
@@ -58,7 +58,7 @@ const send = async () => {
 <template>
   <div class="app-container">
     <div v-loading="loading" v-if="loading" style="width: 100%; height: 100%" />
-    <iframe @load="loading = false" class="codebox" src="http://slice.icfn.top/#/index?url=127.0.1.1" />
+    <!-- <iframe @load="loading = false" class="codebox" src="http://slice.icfn.top/#/index?url=127.0.1.1" /> -->
     <!-- <VideoCard stream-name="VR" title="TEST_VR" /> -->
     <!-- <VideoCard stream-name="preview" title="TEST_preview" /> -->
   </div>

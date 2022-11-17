@@ -192,7 +192,7 @@ function createMenu() {
       label: "基站",
       submenu: [
         {
-          label: "gNodeB",
+          label: "Vivo终端",
           submenu: [
             {
               label: "连接基站",

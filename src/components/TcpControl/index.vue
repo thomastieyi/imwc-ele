@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { type ThemeName, useTheme } from "../../hooks/useTheme"
-import { CircleCloseFilled, Connection, MagicStick, Sugar } from "@element-plus/icons-vue"
+import { CircleCloseFilled, Connection, Loading, MagicStick, Sugar } from "@element-plus/icons-vue"
 import { useTcpStore } from "@/store/modules/tcp"
 import { computed, h, onMounted, ref, watch } from "vue"
 import { ElTooltip, ElIcon, ElDrawer, ElButton, ElNotification } from "element-plus"
@@ -11,36 +11,36 @@ import "xterm/css/xterm.css"
 import { setInterval } from "timers/promises"
 const TCP = useTcpStore()
 const show = ref(false)
-const currTcpName = ref("gNodeB")
+const currTcpName = ref("Vivo终端")
 const names = computed(() => {
   const a = TCP.client_names.split("...")
   a.shift()
   return a
 })
 const err = ref(300)
-const gNodeBConn = computed(() => {
-  return TCP.getTcpConnByName("gNodeB")?.tcp_state.value
+const Vivo终端Conn = computed(() => {
+  return TCP.getTcpConnByName("Vivo终端")?.tcp_state.value
 })
 const new_conn = ref(false)
 watch(names, (o, n) => {
   new_conn.value = true
 })
 
-watch(gNodeBConn, (n, o) => {
+watch(Vivo终端Conn, (n, o) => {
   console.log(n)
   if (n == "UNCONNECTED") {
     if (o == "CONNECTED") {
       ElNotification({
-        title: "基站失去连接",
+        title: "失去连接",
         message: h("i", { style: "color: red" }, JSON.stringify("UNCONNECTED")),
         duration: 1500,
         type: "error",
         position: "bottom-right"
       })
     }
-    setTimeout(() => {
-      conn()
-    }, err.value)
+    // setTimeout(() => {
+    //   conn()
+    // }, err.value)
   }
 })
 // watch(TCP.tcp_pool, (o, n) => {
@@ -164,6 +164,12 @@ const disconn = async () => {
       <div class="clientname">'{{ TCP.getTcpConnByName(currTcpName)?.clientName_ }}' 连接失败</div>
       <el-icon :size="20" class="icon" :color="'#F56C6C'">
         <Connection />
+      </el-icon>
+    </div>
+    <div class="dropdown" v-if="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTING'">
+      <div class="clientname">'{{ TCP.getTcpConnByName(currTcpName)?.clientName_ }}' 尝试连接</div>
+      <el-icon :size="20" class="icon" :color="'#67C23A'">
+        <Loading />
       </el-icon>
     </div>
 

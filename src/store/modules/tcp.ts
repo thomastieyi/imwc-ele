@@ -38,7 +38,7 @@ export const useTcpStore = defineStore("tcpclient", () => {
       tcp_pool.splice(flag, 1)
     }
   }
-  addTcpPool("gNodeB")
+  addTcpPool("Vivo终端")
   return { tcp_pool, getTcpConnByName, addTcpPool, delTcpConnByName, client_names }
 })
 
