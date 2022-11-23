@@ -9,7 +9,10 @@ import { Terminal } from "xterm"
 import { TCPClient } from "@/utils/tcp-client"
 import "xterm/css/xterm.css"
 import { setInterval } from "timers/promises"
+import { useUdpStore } from "@/store/modules/udp"
 const TCP = useTcpStore()
+const UDP = useUdpStore()
+console.log(UDP)
 const show = ref(false)
 const currTcpName = ref("Vivo终端")
 const names = computed(() => {

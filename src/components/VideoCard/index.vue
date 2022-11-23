@@ -27,22 +27,6 @@ const show_both = computed(() => {
 
 const emits = defineEmits(["clientName"])
 
-const clientName = computed({
-  get() {
-    return props.clientName
-  },
-  set(clientName) {
-    console.log(clientName)
-  }
-})
-watch(clientName, (n, o) => {
-  printcnt.value = 0
-  term.value.clear()
-  term.value.writeln(`${n}`)
-})
-
-const printcnt = ref(0)
-
 onMounted(async () => {
   const canvas = document.getElementById(props.streamName)
   const player = new JSMpeg.Player(`ws://${document.domain ? document.domain : "127.0.0.1"}:8082/` + props.streamName, {
