@@ -42,7 +42,7 @@ const logout = () => {
       <!-- <Screenfull v-if="showScreenfull" class="right-menu-item" />
       <ThemeSwitch v-if="showThemeSwitch" class="right-menu-item" /> -->
       <TcpControl v-if="showThemeSwitch" class="right-menu-item" />
-      <el-dropdown class="right-menu-item">
+      <!-- <el-dropdown class="right-menu-item">
         <el-avatar :icon="UserFilled" :size="34" />
         <template #dropdown>
           <el-dropdown-menu>
@@ -72,7 +72,7 @@ const logout = () => {
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
-      </el-dropdown>
+      </el-dropdown> -->
     </div>
   </div>
 </template>

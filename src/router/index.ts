@@ -39,41 +39,26 @@ export const constantRoutes: RouteRecordRaw[] = [
       hidden: true
     }
   },
-  {
-    path: "/",
-    component: Layout,
-    redirect: "/dashboard",
-    children: [
-      {
-        path: "dashboard",
-        component: () => import("@/views/slice/index.vue"),
-        name: "Dashboard",
-        meta: {
-          title: "基站信息",
-          svgIcon: "dashboard",
-          affix: true
-        }
-      }
-    ]
-  },
   // {
-  //   path: "/stream",
+  //   path: "/",
   //   component: Layout,
+  //   redirect: "/dashboard",
   //   children: [
   //     {
-  //       path: "http://stream.icfn.top",
-  //       component: () => {},
-  //       name: "stream",
+  //       path: "dashboard",
+  //       component: () => import("@/views/slice/index.vue"),
+  //       name: "Dashboard",
   //       meta: {
-  //         title: "StreamAI",
-  //         svgIcon: "link"
+  //         title: "基站信息",
+  //         svgIcon: "dashboard",
+  //         affix: true
   //       }
   //     }
   //   ]
-  // }
+  // },
 
   {
-    path: "/stream",
+    path: "/",
     component: Layout,
     redirect: "/stream",
     children: [
@@ -84,6 +69,21 @@ export const constantRoutes: RouteRecordRaw[] = [
         meta: {
           title: "StreamAI",
           svgIcon: "unocss"
+        }
+      }
+    ]
+  },
+  {
+    path: "/stream",
+    component: Layout,
+    children: [
+      {
+        path: "http://127.0.0.1:8000/admin/stream",
+        component: () => {},
+        name: "stream",
+        meta: {
+          title: "推流服务器",
+          svgIcon: "link"
         }
       }
     ]

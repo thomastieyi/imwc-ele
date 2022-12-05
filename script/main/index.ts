@@ -188,52 +188,52 @@ function createTray() {
 
 function createMenu() {
   const menu = Menu.buildFromTemplate([
-    {
-      label: "基站",
-      submenu: [
-        {
-          label: "gNodeB",
-          submenu: [
-            {
-              label: "连接基站",
-              click: function () {
-                console.log("https://oai.icfn.top")
-                createGNBWindow("https://oai.icfn.top")
-              }
-            },
-            {
-              label: "启动基站",
-              click: function () {
-                const cwd = isDev
-                  ? PATH.resolve(__dirname, "../../resources/test/")
-                  : PATH.resolve(app.getAppPath(), "../test/")
-                const encodePath = iconv.encode(cwd + "\\start_gnb.bat", "ascii").toString("binary")
-                console.log(encodePath)
-                shell.openExternal(encodePath)
-              }
-            }
-          ]
-        },
-        {
-          label: "启动Server",
-          click: function () {
-            const cwd = isDev
-              ? PATH.resolve(__dirname, "../../resources/test/")
-              : PATH.resolve(app.getAppPath(), "../test/")
-            const encodePath = iconv.encode(cwd + "\\java.bat", "ascii").toString("binary")
-            console.log(encodePath)
-            shell.openExternal(encodePath)
-          }
-        }
-      ]
-    },
-    {
-      label: "核心网",
-      click: function () {
-        console.log("http://192.168.1.248:30080")
-        createCoreWindow("http://192.168.1.248:30080")
-      }
-    },
+    // {
+    //   label: "基站",
+    //   submenu: [
+    //     {
+    //       label: "gNodeB",
+    //       submenu: [
+    //         {
+    //           label: "连接基站",
+    //           click: function () {
+    //             console.log("https://oai.icfn.top")
+    //             createGNBWindow("https://oai.icfn.top")
+    //           }
+    //         },
+    //         {
+    //           label: "启动基站",
+    //           click: function () {
+    //             const cwd = isDev
+    //               ? PATH.resolve(__dirname, "../../resources/test/")
+    //               : PATH.resolve(app.getAppPath(), "../test/")
+    //             const encodePath = iconv.encode(cwd + "\\start_gnb.bat", "ascii").toString("binary")
+    //             console.log(encodePath)
+    //             shell.openExternal(encodePath)
+    //           }
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       label: "启动Server",
+    //       click: function () {
+    //         const cwd = isDev
+    //           ? PATH.resolve(__dirname, "../../resources/test/")
+    //           : PATH.resolve(app.getAppPath(), "../test/")
+    //         const encodePath = iconv.encode(cwd + "\\java.bat", "ascii").toString("binary")
+    //         console.log(encodePath)
+    //         shell.openExternal(encodePath)
+    //       }
+    //     }
+    //   ]
+    // },
+    // {
+    //   label: "核心网",
+    //   click: function () {
+    //     console.log("http://192.168.1.248:30080")
+    //     createCoreWindow("http://192.168.1.248:30080")
+    //   }
+    // },
     {
       label: "AI引擎",
       submenu: [
@@ -252,90 +252,107 @@ function createMenu() {
             //   }
             // })
           }
-        },
-        {
-          label: "切片管理模块",
-          click: function () {
-            const cwd = isDev
-              ? PATH.resolve(__dirname, "../../resources/test/")
-              : PATH.resolve(app.getAppPath(), "../test/")
-            const encodePath = iconv.encode(cwd + "\\ai_engine_slice.bat", "ascii").toString("binary")
-            console.log(encodePath)
-            shell.openExternal(encodePath)
-          }
-        },
-        {
-          label: "流量识别模块",
-          click: function () {
-            const cwd = isDev
-              ? PATH.resolve(__dirname, "../../resources/test/")
-              : PATH.resolve(app.getAppPath(), "../test/")
-            const encodePath = iconv.encode(cwd + "\\ai_engine_flow.bat", "ascii").toString("binary")
-            console.log(encodePath)
-            shell.openExternal(encodePath)
-          }
         }
+        // {
+        //   label: "切片管理模块",
+        //   click: function () {
+        //     const cwd = isDev
+        //       ? PATH.resolve(__dirname, "../../resources/test/")
+        //       : PATH.resolve(app.getAppPath(), "../test/")
+        //     const encodePath = iconv.encode(cwd + "\\ai_engine_slice.bat", "ascii").toString("binary")
+        //     console.log(encodePath)
+        //     shell.openExternal(encodePath)
+        //   }
+        // },
+        // {
+        //   label: "流量识别模块",
+        //   click: function () {
+        //     const cwd = isDev
+        //       ? PATH.resolve(__dirname, "../../resources/test/")
+        //       : PATH.resolve(app.getAppPath(), "../test/")
+        //     const encodePath = iconv.encode(cwd + "\\ai_engine_flow.bat", "ascii").toString("binary")
+        //     console.log(encodePath)
+        //     shell.openExternal(encodePath)
+        //   }
+        // }
       ]
     },
     {
-      label: "测试手机",
-      submenu: [
-        {
-          label: "打开全部",
-          click: function () {
-            const cwd = isDev
-              ? PATH.resolve(__dirname, "../../resources/test/")
-              : PATH.resolve(app.getAppPath(), "../test/")
-            const encodePath = iconv.encode(cwd + "\\ue_vr.bat", "ascii").toString("binary")
-            const encodePath1 = iconv.encode(cwd + "\\ue_voip.bat", "ascii").toString("binary")
-            const encodePath2 = iconv.encode(cwd + "\\ue_videos.bat", "ascii").toString("binary")
-            console.log(encodePath)
-            shell.openExternal(encodePath)
-            shell.openExternal(encodePath1)
-            shell.openExternal(encodePath2)
-          }
-        },
-        {
-          label: "UE1",
-          click: function () {
-            const cwd = isDev
-              ? PATH.resolve(__dirname, "../../resources/test/")
-              : PATH.resolve(app.getAppPath(), "../test/")
-            const encodePath = iconv.encode(cwd + "\\ue_vr.bat", "ascii").toString("binary")
-            const encodePath1 = iconv.encode(cwd + "\\ue_voip.bat", "ascii").toString("binary")
-            const encodePath2 = iconv.encode(cwd + "\\ue_videos.bat", "ascii").toString("binary")
-            console.log(encodePath)
-            shell.openExternal(encodePath)
-          }
-        },
-        {
-          label: "UE2",
-          click: function () {
-            const cwd = isDev
-              ? PATH.resolve(__dirname, "../../resources/test/")
-              : PATH.resolve(app.getAppPath(), "../test/")
-            const encodePath = iconv.encode(cwd + "\\ue_vr.bat", "ascii").toString("binary")
-            const encodePath1 = iconv.encode(cwd + "\\ue_voip.bat", "ascii").toString("binary")
-            const encodePath2 = iconv.encode(cwd + "\\ue_videos.bat", "ascii").toString("binary")
-            console.log(encodePath)
-            shell.openExternal(encodePath1)
-          }
-        },
-        {
-          label: "UE3",
-          click: function () {
-            const cwd = isDev
-              ? PATH.resolve(__dirname, "../../resources/test/")
-              : PATH.resolve(app.getAppPath(), "../test/")
-            const encodePath = iconv.encode(cwd + "\\ue_vr.bat", "ascii").toString("binary")
-            const encodePath1 = iconv.encode(cwd + "\\ue_voip.bat", "ascii").toString("binary")
-            const encodePath2 = iconv.encode(cwd + "\\ue_videos.bat", "ascii").toString("binary")
-            console.log(encodePath)
-            shell.openExternal(encodePath2)
-          }
-        }
-      ]
+      label: "视频服务器",
+      click: function () {
+        const cwd = isDev
+          ? PATH.resolve(__dirname, "../../resources/test/")
+          : PATH.resolve(app.getAppPath(), "../test/")
+        const encodePath = iconv.encode(cwd + "\\stream_server.bat", "ascii").toString("binary")
+        console.log(encodePath)
+        shell.openExternal(encodePath)
+        // exec("ai_engine.bat", { cwd }, (error, stdout, stderr) => {
+        //   if (error) {
+        //     console.error(`执行的错误: ${JSON.stringify(error)}`)
+        //   }
+        // })
+      }
     }
+
+    // {
+    //   label: "测试手机",
+    //   submenu: [
+    //     {
+    //       label: "打开全部",
+    //       click: function () {
+    //         const cwd = isDev
+    //           ? PATH.resolve(__dirname, "../../resources/test/")
+    //           : PATH.resolve(app.getAppPath(), "../test/")
+    //         const encodePath = iconv.encode(cwd + "\\ue_vr.bat", "ascii").toString("binary")
+    //         const encodePath1 = iconv.encode(cwd + "\\ue_voip.bat", "ascii").toString("binary")
+    //         const encodePath2 = iconv.encode(cwd + "\\ue_videos.bat", "ascii").toString("binary")
+    //         console.log(encodePath)
+    //         shell.openExternal(encodePath)
+    //         shell.openExternal(encodePath1)
+    //         shell.openExternal(encodePath2)
+    //       }
+    //     },
+    //     {
+    //       label: "UE1",
+    //       click: function () {
+    //         const cwd = isDev
+    //           ? PATH.resolve(__dirname, "../../resources/test/")
+    //           : PATH.resolve(app.getAppPath(), "../test/")
+    //         const encodePath = iconv.encode(cwd + "\\ue_vr.bat", "ascii").toString("binary")
+    //         const encodePath1 = iconv.encode(cwd + "\\ue_voip.bat", "ascii").toString("binary")
+    //         const encodePath2 = iconv.encode(cwd + "\\ue_videos.bat", "ascii").toString("binary")
+    //         console.log(encodePath)
+    //         shell.openExternal(encodePath)
+    //       }
+    //     },
+    //     {
+    //       label: "UE2",
+    //       click: function () {
+    //         const cwd = isDev
+    //           ? PATH.resolve(__dirname, "../../resources/test/")
+    //           : PATH.resolve(app.getAppPath(), "../test/")
+    //         const encodePath = iconv.encode(cwd + "\\ue_vr.bat", "ascii").toString("binary")
+    //         const encodePath1 = iconv.encode(cwd + "\\ue_voip.bat", "ascii").toString("binary")
+    //         const encodePath2 = iconv.encode(cwd + "\\ue_videos.bat", "ascii").toString("binary")
+    //         console.log(encodePath)
+    //         shell.openExternal(encodePath1)
+    //       }
+    //     },
+    //     {
+    //       label: "UE3",
+    //       click: function () {
+    //         const cwd = isDev
+    //           ? PATH.resolve(__dirname, "../../resources/test/")
+    //           : PATH.resolve(app.getAppPath(), "../test/")
+    //         const encodePath = iconv.encode(cwd + "\\ue_vr.bat", "ascii").toString("binary")
+    //         const encodePath1 = iconv.encode(cwd + "\\ue_voip.bat", "ascii").toString("binary")
+    //         const encodePath2 = iconv.encode(cwd + "\\ue_videos.bat", "ascii").toString("binary")
+    //         console.log(encodePath)
+    //         shell.openExternal(encodePath2)
+    //       }
+    //     }
+    //   ]
+    // }
   ])
   Menu.setApplicationMenu(menu)
 }
