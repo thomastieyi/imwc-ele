@@ -39,23 +39,23 @@ export const constantRoutes: RouteRecordRaw[] = [
       hidden: true
     }
   },
-  {
-    path: "/",
-    component: Layout,
-    redirect: "/dashboard",
-    children: [
-      {
-        path: "dashboard",
-        component: () => import("@/views/slice/index.vue"),
-        name: "Dashboard",
-        meta: {
-          title: "基站信息",
-          svgIcon: "dashboard",
-          affix: true
-        }
-      }
-    ]
-  },
+  // {
+  //   path: "/",
+  //   component: Layout,
+  //   redirect: "/dashboard",
+  //   children: [
+  //     {
+  //       path: "dashboard",
+  //       component: () => import("@/views/slice/index.vue"),
+  //       name: "Dashboard",
+  //       meta: {
+  //         title: "基站信息",
+  //         svgIcon: "dashboard",
+  //         affix: true
+  //       }
+  //     }
+  //   ]
+  // },
   // {
   //   path: "/stream",
   //   component: Layout,
@@ -73,7 +73,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   // }
 
   {
-    path: "/stream",
+    path: "/",
     component: Layout,
     redirect: "/stream",
     children: [
