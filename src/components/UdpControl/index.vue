@@ -5,6 +5,7 @@ import { useTcpStore } from "@/store/modules/tcp"
 import { computed, h, onMounted, ref, watch } from "vue"
 import { ElTooltip, ElIcon, ElDrawer, ElButton, ElNotification } from "element-plus"
 import TcpMsgTip from "@/components/TcpMsgTip/index.vue"
+import UdpMsgTip from "@/components/UdpMsgTip/index.vue"
 import { Terminal } from "xterm"
 import { TCPClient } from "@/utils/tcp-client"
 import "xterm/css/xterm.css"
@@ -12,7 +13,6 @@ import { setInterval } from "timers/promises"
 import { useUdpStore } from "@/store/modules/udp"
 const TCP = useTcpStore()
 const UDP = useUdpStore()
-console.log(UDP)
 const show = ref(false)
 const currTcpName = ref("Vivo终端")
 const names = computed(() => {
@@ -21,6 +21,7 @@ const names = computed(() => {
   return a
 })
 const err = ref(300)
+const textarea2 = ref("请输入AT指令")
 const Vivo终端Conn = computed(() => {
   return TCP.getTcpConnByName("Vivo终端")?.tcp_state.value
 })
@@ -49,13 +50,21 @@ watch(Vivo终端Conn, (n, o) => {
 // watch(TCP.tcp_pool, (o, n) => {
 //   console.log(n)
 // })
+const conn_str = computed(() => {
+  return UDP.ahost + ":"+ UDP.aport
+})
+watch(conn_str, (o, n) => {
+  console.log(o,n)
+  ahost.value = UDP.ahost
+  aport.value = UDP.aport
+})
 const ahost = ref()
 const aport = ref()
 
 const handleSetTcp = (clientName: string) => {
   currTcpName.value = clientName
-  ahost.value = TCP.getTcpConnByName(currTcpName.value)?.tcp_conn_info.value.host
-  aport.value = TCP.getTcpConnByName(currTcpName.value)?.tcp_conn_info.value.port
+  ahost.value = UDP.ahost
+  aport.value = UDP.aport
   console.log(clientName)
   show.value = true
   new_conn.value = false
@@ -68,27 +77,50 @@ const handleAddTcp = (clientName: string) => {
 // console.log(TCP.tcp_pool[0].client)
 // client.tcp_pool.conn(8080, "127.0.0.1")
 onMounted(() => {
-  ahost.value = "172.26.100.8"
-  aport.value = 10000
-
+  ahost.value = UDP.ahost
+  aport.value = UDP.aport
   // if (TCP.getTcpConnByName(currTcpName.value)?.tcp_state.value == "UNCONNECTED") {
-  conn()
+  // conn()
   // }
 })
+
+const options = [
+  {
+    value: 'at+cfun=1',
+    label: 'at+cfun=1',
+  },
+  {
+    value: 'at+CGDCONT=1,IPV4V6,,,,,,,,,cs-ai-acceleration,1\r',
+    label: '算力请求',
+  },
+  {
+    value: 'Option3',
+    label: 'Option3',
+  },
+  {
+    value: 'Option4',
+    label: 'Option4',
+  },
+  {
+    value: 'Option5',
+    label: 'Option5',
+  },
+]
+
 const conn = async () => {
   // await client.conn()
-  console.log(TCP.getTcpConnByName(currTcpName.value))
   // await TCP.addTcpPool("test")
   try {
-    await TCP.getTcpConnByName(currTcpName.value)?.tcp_conn(aport.value, ahost.value)
+    UDP.send_udp_msg(textarea2.value,aport.value,ahost.value)
+    // await TCP.getTcpConnByName(currTcpName.value)?.tcp_conn(aport.value, ahost.value)
     ElNotification({
-      title: `${currTcpName.value}连接成功`,
-      message: h("i", { style: "color: teal" }, `${ahost.value}:${aport.value}`),
+      title: `AT指令  发送成功`,
+      message: h("i", { style: "color: teal" }, `${textarea2.value}`),
       duration: 2000,
       type: "success",
       position: "bottom-right"
     })
-    err.value = 300
+    // err.value = 300
   } catch (error) {
     console.log(error)
     // ElMessage.error('Oops, this is a error message.')
@@ -114,10 +146,10 @@ const disconn = async () => {
   <el-dropdown trigger="click">
     <el-badge :is-dot="new_conn" class="item">
       <div>
-        <el-tooltip effect="dark" content="TCP连接情况" placement="bottom">
+        <el-tooltip effect="dark" content="UDP对话框" placement="bottom">
           <el-icon
             :size="20"
-            :color="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED' ? '#67C23A' : '#F56C6C'"
+            :color="'#67C23A'"
           >
             <Connection />
           </el-icon>
@@ -132,7 +164,7 @@ const disconn = async () => {
             <el-icon
               :size="20"
               class="icon"
-              :color="TCP.getTcpConnByName(client)?.tcp_state.value == 'CONNECTED' ? '#67C23A' : '#F56C6C'"
+              :color="'#67C23A'"
             >
               <Connection />
             </el-icon>
@@ -157,24 +189,13 @@ const disconn = async () => {
   </div> -->
 
   <el-drawer v-model="show" size="350px" :show-close="false" :with-header="false">
-    <div class="dropdown" v-if="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED'">
-      <div class="clientname">'{{ TCP.getTcpConnByName(currTcpName)?.clientName_ }}' 连接成功</div>
+    <div class="dropdown">
+      <div class="clientname">UDP客户端</div>
       <el-icon :size="20" class="icon" :color="'#67C23A'">
         <Connection />
       </el-icon>
     </div>
-    <div class="dropdown" v-if="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'UNCONNECTED'">
-      <div class="clientname">'{{ TCP.getTcpConnByName(currTcpName)?.clientName_ }}' 连接失败</div>
-      <el-icon :size="20" class="icon" :color="'#F56C6C'">
-        <Connection />
-      </el-icon>
-    </div>
-    <div class="dropdown" v-if="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTING'">
-      <div class="clientname">'{{ TCP.getTcpConnByName(currTcpName)?.clientName_ }}' 尝试连接</div>
-      <el-icon :size="20" class="icon" :color="'#67C23A'">
-        <Loading />
-      </el-icon>
-    </div>
+ 
 
     <!-- {{ TCP.getTcpConnByName(currTcpName)?.tcp_conn_info.value.host }}:{{
       TCP.getTcpConnByName(currTcpName)?.tcp_conn_info.value.port
@@ -182,34 +203,39 @@ const disconn = async () => {
     <el-input
       v-model="ahost"
       placeholder="Please input"
-      :disabled="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED'"
     >
       <template #prepend>HOST</template>
     </el-input>
     <el-input
       v-model="aport"
       placeholder="Please input"
-      :disabled="TCP.getTcpConnByName(currTcpName)?.tcp_state.value == 'CONNECTED'"
     >
       <template #prepend>PORT</template>
     </el-input>
+    <el-input
+    v-model="textarea2"
+    :autosize="{ minRows: 2, maxRows: 4 }"
+    type="textarea"
+    placeholder="Please input"
+  />
     <div class="input">
       <el-button
         type="success"
         @click="conn"
-        :disabled="TCP.getTcpConnByName(currTcpName)?.tcp_state.value !== 'UNCONNECTED'"
-        >连接</el-button
+        >发送</el-button
       >
-      <el-button
-        type="danger"
-        @click="disconn"
-        :disabled="TCP.getTcpConnByName(currTcpName)?.tcp_state.value !== 'CONNECTED'"
-        >断开</el-button
-      >
+    <el-select class="select" v-model="textarea2">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    />
+  </el-select>
     </div>
 
     <el-divider />
-    <TcpMsgTip v-model:client-name="currTcpName" />
+    <UdpMsgTip v-model:client-name="currTcpName" />
     <!-- <div v-for="item in client.conn_msgs" v-bind:key="item.msg">
       <TcpMsgTip :updown="item.updown" :msg="item.msg" />
     </div> -->
@@ -232,6 +258,8 @@ const disconn = async () => {
   display: flex;
   justify-content: space-between;
 }
+
+
 .icon {
   display: inline;
 }

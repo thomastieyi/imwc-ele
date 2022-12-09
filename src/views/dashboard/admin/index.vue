@@ -16,18 +16,6 @@ const data = computed(() => {
   let maxx = 1
   let maxy = 1
 
-  for (let i = 0; i < UDP.srs_data.channleEstList.length; i++) {
-    if (Math.abs(UDP.srs_data.channleEstList[i].image) > maxx) {
-      maxx = Math.abs(UDP.srs_data.channleEstList[i].image)
-    }
-    if (Math.abs(UDP.srs_data.channleEstList[i].real) > maxy) {
-      maxy = Math.abs(UDP.srs_data.channleEstList[i].real)
-    }
-    data1.push([UDP.srs_data.channleEstList[i].image, UDP.srs_data.channleEstList[i].real])
-  }
-  for (let i = 0; i < UDP.srs_data.channleEstList.length; i++) {
-    data1.push([UDP.srs_data.channleEstList[i].image / maxx, UDP.srs_data.channleEstList[i].real / maxy])
-  }
   return data1
 })
 watch(data, (n, o) => {
@@ -57,9 +45,7 @@ onMounted(async () => {
   res.value = new Uint8Array([1])
   const data = [[0, 0]]
   data.unshift()
-  for (let i = 0; i < UDP.srs_data.channleEstList.length; i++) {
-    data.push([UDP.srs_data.channleEstList[i].image, UDP.srs_data.channleEstList[i].real])
-  }
+
   const option = {
     xAxis: {
       min: 1,

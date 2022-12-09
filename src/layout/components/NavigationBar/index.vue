@@ -10,6 +10,7 @@ import Hamburger from "../Hamburger/index.vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import Screenfull from "@/components/Screenfull/index.vue"
 import TcpControl from "@/components/TcpControl/index.vue"
+import UdpControl from "@/components/UdpControl/index.vue"
 const router = useRouter()
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
@@ -41,8 +42,9 @@ const logout = () => {
     <div class="right-menu">
       <!-- <Screenfull v-if="showScreenfull" class="right-menu-item" />
       <ThemeSwitch v-if="showThemeSwitch" class="right-menu-item" /> -->
-      <TcpControl v-if="showThemeSwitch" class="right-menu-item" />
-      <el-dropdown class="right-menu-item">
+      <!-- <TcpControl v-if="showThemeSwitch" class="right-menu-item" /> -->
+      <UdpControl v-if="showThemeSwitch" class="right-menu-item" />
+      <!-- <el-dropdown class="right-menu-item">
         <el-avatar :icon="UserFilled" :size="34" />
         <template #dropdown>
           <el-dropdown-menu>
@@ -72,7 +74,7 @@ const logout = () => {
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
-      </el-dropdown>
+      </el-dropdown> -->
     </div>
   </div>
 </template>
@@ -101,8 +103,8 @@ const logout = () => {
     align-items: center;
     color: #606266;
     .right-menu-item {
-      padding: 0 10px;
       cursor: pointer;
+      margin-right: 40px;
     }
   }
 }
